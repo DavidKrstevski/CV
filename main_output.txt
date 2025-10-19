@@ -1,0 +1,151 @@
+'''
+Loaded 24099 valid images out of 24108 files.
+
+=== Dataset Summary ===
+Total images: 24099
+Age range: 1 - 116 (mean: 33.0)
+Gender distribution:
+gender
+0    12578
+1    11521
+Name: count, dtype: int64
+Race distribution:
+race
+0    10220
+1     4556
+3     4027
+2     3585
+4     1711
+Name: count, dtype: int64
+Average image size (HxW): [662 637]
+Resizing all images into RAM...
+Train/Val/Test shapes: (16869, 224, 224, 3) (3615, 224, 224, 3) (3615, 224, 224, 3)
+Bin counts (train): Counter({np.int64(3): 5408, np.int64(4): 4007, np.int64(5): 2363, np.int64(0): 1682, np.int64(6): 1434, np.int64(1): 807, np.int64(2): 679, np.int64(7): 489})
+Bin counts (val):   Counter({np.int64(3): 1159, np.int64(4): 859, np.int64(5): 506, np.int64(0): 361, np.int64(6): 307, np.int64(1): 173, np.int64(2): 145, np.int64(7): 105})
+Bin counts (test):  Counter({np.int64(3): 1159, np.int64(4): 859, np.int64(5): 506, np.int64(0): 361, np.int64(6): 307, np.int64(1): 173, np.int64(2): 145, np.int64(7): 105})
+Example weights: [0.38990846 1.2536415  0.52623534 4.3121166  0.38990846 1.2536415
+ 0.89235085 0.52623534 0.89235085 0.52623534]
+Debug batch: (8, 224, 224, 3) (8,) (8,) float32
+torch.Size([8, 3, 224, 224]) torch.Size([8]) torch.Size([8])
+Torch batch shapes: torch.Size([16, 3, 224, 224]) torch.Size([16]) torch.Size([16])
+2025-10-19 13:45:46.779569: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+C:\Users\kayam\AppData\Local\Programs\Python\Python312\Lib\site-packages\keras\src\layers\convolutional\base_conv.py:113: UserWarning: Do not pass an `input_shape`/`input_dim` argument to a layer. When using Sequential models, prefer using an `Input(shape)` object as the first layer in the model instead.
+  super().__init__(activity_regularizer=activity_regularizer, **kwargs)
+2025-10-19 13:45:59.923330: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE3 SSE4.1 SSE4.2 AVX AVX2 AVX_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+Model: "sequential"
+┌─────────────────────────────────┬────────────────────────┬───────────────┐
+│ Layer (type)                    │ Output Shape           │       Param # │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv2d (Conv2D)                 │ (None, 224, 224, 32)   │           896 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ batch_normalization             │ (None, 224, 224, 32)   │           128 │
+│ (BatchNormalization)            │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ max_pooling2d (MaxPooling2D)    │ (None, 112, 112, 32)   │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dropout (Dropout)               │ (None, 112, 112, 32)   │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv2d_1 (Conv2D)               │ (None, 112, 112, 64)   │        18,496 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ batch_normalization_1           │ (None, 112, 112, 64)   │           256 │
+│ (BatchNormalization)            │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ max_pooling2d_1 (MaxPooling2D)  │ (None, 56, 56, 64)     │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dropout_1 (Dropout)             │ (None, 56, 56, 64)     │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv2d_2 (Conv2D)               │ (None, 56, 56, 128)    │        73,856 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ batch_normalization_2           │ (None, 56, 56, 128)    │           512 │
+│ (BatchNormalization)            │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ max_pooling2d_2 (MaxPooling2D)  │ (None, 28, 28, 128)    │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dropout_2 (Dropout)             │ (None, 28, 28, 128)    │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ global_average_pooling2d        │ (None, 128)            │             0 │
+│ (GlobalAveragePooling2D)        │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense (Dense)                   │ (None, 128)            │        16,512 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ batch_normalization_3           │ (None, 128)            │           512 │
+│ (BatchNormalization)            │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dropout_3 (Dropout)             │ (None, 128)            │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_1 (Dense)                 │ (None, 1)              │           129 │
+└─────────────────────────────────┴────────────────────────┴───────────────┘
+ Total params: 111,297 (434.75 KB)
+ Trainable params: 110,593 (432.00 KB)
+ Non-trainable params: 704 (2.75 KB)
+Training samples: 16869 | Validation samples: 3615
+Steps per epoch: 527 | Validation steps: 112
+Batch size: 32
+Epoch 1/80
+527/527 ━━━━━━━━━━━━━━━━━━━━ 998s 2s/step - loss: 35.8748 - mae: 32.7849 - mse: 1480.6705 - val_loss: 32.0604 - val_mae: 31.9368 - val_mse: 1424.8370 - learning_rate: 1.0000e-04
+Epoch 2/80
+527/527 ━━━━━━━━━━━━━━━━━━━━ 0s 2s/step - loss: 35.7951 - mae: 32.2046 - mse: 1444.22512025-10-19 14:17:17.148886: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node IteratorGetNext}}]]
+C:\Users\kayam\AppData\Local\Programs\Python\Python312\Lib\site-packages\keras\src\trainers\epoch_iterator.py:164: UserWarning: Your input ran out of data; interrupting training. Make sure that your dataset or generator can generate at least `steps_per_epoch * epochs` batches. You may need to use the `.repeat()` function when building your dataset.
+  self._interrupted_warning()
+527/527 ━━━━━━━━━━━━━━━━━━━━ 879s 2s/step - loss: 34.9519 - mae: 31.9558 - mse: 1419.3497 - val_loss: 26.8054 - val_mae: 26.6833 - val_mse: 1044.7921 - learning_rate: 1.0000e-04
+Epoch 3/80
+527/527 ━━━━━━━━━━━━━━━━━━━━ 0s 1s/step - loss: 34.0423 - mae: 30.9385 - mse: 1349.02622025-10-19 14:28:42.765060: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node IteratorGetNext}}]]
+527/527 ━━━━━━━━━━━━━━━━━━━━ 685s 1s/step - loss: 33.8344 - mae: 30.7587 - mse: 1332.3428 - val_loss: 24.5520 - val_mae: 24.4308 - val_mse: 891.0372 - learning_rate: 1.0000e-04
+Epoch 4/80
+527/527 ━━━━━━━━━━━━━━━━━━━━ 304s 577ms/step - loss: 32.3527 - mae: 29.1349 - mse: 1219.0804 - val_loss: 21.9090 - val_mae: 21.7885 - val_mse: 731.2513 - learning_rate: 1.0000e-04
+Epoch 5/80
+527/527 ━━━━━━━━━━━━━━━━━━━━ 0s 570ms/step - loss: 30.1694 - mae: 27.3754 - mse: 1096.97452025-10-19 14:38:48.225855: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node IteratorGetNext}}]]
+527/527 ━━━━━━━━━━━━━━━━━━━━ 304s 576ms/step - loss: 30.3634 - mae: 27.0336 - mse: 1076.2467 - val_loss: 16.5332 - val_mae: 16.4132 - val_mse: 433.5248 - learning_rate: 1.0000e-04
+Epoch 6/80
+527/527 ━━━━━━━━━━━━━━━━━━━━ 301s 572ms/step - loss: 28.6493 - mae: 24.8031 - mse: 936.0316 - val_loss: 16.9348 - val_mae: 16.8152 - val_mse: 420.5617 - learning_rate: 1.0000e-04
+Epoch 7/80
+527/527 ━━━━━━━━━━━━━━━━━━━━ 631s 1s/step - loss: 26.6556 - mae: 22.3409 - mse: 795.2814 - val_loss: 27.4522 - val_mae: 27.3328 - val_mse: 1088.7301 - learning_rate: 1.0000e-04
+Epoch 8/80
+527/527 ━━━━━━━━━━━━━━━━━━━━ 936s 2s/step - loss: 24.6939 - mae: 20.1039 - mse: 669.3750 - val_loss: 16.4384 - val_mae: 16.3193 - val_mse: 447.1206 - learning_rate: 1.0000e-04
+Epoch 9/80
+527/527 ━━━━━━━━━━━━━━━━━━━━ 0s 2s/step - loss: 23.4752 - mae: 18.6705 - mse: 588.33752025-10-19 15:24:08.984626: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node IteratorGetNext}}]]
+527/527 ━━━━━━━━━━━━━━━━━━━━ 851s 2s/step - loss: 22.9845 - mae: 18.2037 - mse: 562.7274 - val_loss: 28.0680 - val_mae: 27.9490 - val_mse: 1079.2433 - learning_rate: 1.0000e-04
+Epoch 10/80
+527/527 ━━━━━━━━━━━━━━━━━━━━ 938s 2s/step - loss: 21.4858 - mae: 16.9529 - mse: 489.6631 - val_loss: 17.5594 - val_mae: 17.4405 - val_mse: 428.9632 - learning_rate: 1.0000e-04
+Epoch 11/80
+527/527 ━━━━━━━━━━━━━━━━━━━━ 939s 2s/step - loss: 20.5385 - mae: 15.9930 - mse: 438.4792 - val_loss: 20.4031 - val_mae: 20.2844 - val_mse: 551.4254 - learning_rate: 1.0000e-04
+Epoch 12/80
+527/527 ━━━━━━━━━━━━━━━━━━━━ 475s 900ms/step - loss: 19.5573 - mae: 15.2440 - mse: 398.6833 - val_loss: 18.0254 - val_mae: 17.9068 - val_mse: 538.3438 - learning_rate: 1.0000e-04
+Epoch 13/80
+527/527 ━━━━━━━━━━━━━━━━━━━━ 0s 1s/step - loss: 19.2879 - mae: 14.9635 - mse: 383.1886
+Epoch 13: ReduceLROnPlateau reducing learning rate to 4.999999873689376e-05.
+527/527 ━━━━━━━━━━━━━━━━━━━━ 693s 1s/step - loss: 19.0216 - mae: 14.8270 - mse: 376.8256 - val_loss: 24.4238 - val_mae: 24.3052 - val_mse: 810.4846 - learning_rate: 1.0000e-04
+Epoch 14/80
+527/527 ━━━━━━━━━━━━━━━━━━━━ 748s 1s/step - loss: 18.6809 - mae: 14.4700 - mse: 360.9674 - val_loss: 21.0773 - val_mae: 20.9588 - val_mse: 591.1957 - learning_rate: 5.0000e-05
+Epoch 15/80
+527/527 ━━━━━━━━━━━━━━━━━━━━ 697s 1s/step - loss: 18.0433 - mae: 14.1705 - mse: 347.3876 - val_loss: 20.3647 - val_mae: 20.2462 - val_mse: 549.1940 - learning_rate: 5.0000e-05
+Epoch 16/80
+527/527 ━━━━━━━━━━━━━━━━━━━━ 464s 880ms/step - loss: 18.0243 - mae: 14.1347 - mse: 340.8639 - val_loss: 20.8440 - val_mae: 20.7256 - val_mse: 576.3277 - learning_rate: 5.0000e-05
+Epoch 17/80
+527/527 ━━━━━━━━━━━━━━━━━━━━ 0s 570ms/step - loss: 17.8054 - mae: 14.0446 - mse: 338.69732025-10-19 16:51:44.432200: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node IteratorGetNext}}]]
+527/527 ━━━━━━━━━━━━━━━━━━━━ 301s 571ms/step - loss: 17.7903 - mae: 14.0402 - mse: 337.2283 - val_loss: 26.5598 - val_mae: 26.4415 - val_mse: 970.7440 - learning_rate: 5.0000e-05
+Epoch 18/80
+527/527 ━━━━━━━━━━━━━━━━━━━━ 0s 598ms/step - loss: 17.8341 - mae: 14.1199 - mse: 343.7043
+Epoch 18: ReduceLROnPlateau reducing learning rate to 2.499999936844688e-05.
+527/527 ━━━━━━━━━━━━━━━━━━━━ 316s 599ms/step - loss: 17.8327 - mae: 14.0269 - mse: 337.7361 - val_loss: 27.8719 - val_mae: 27.7536 - val_mse: 1063.4614 - learning_rate: 5.0000e-05
+113/113 ━━━━━━━━━━━━━━━━━━━━ 13s 114ms/step - loss: 15.3377 - mae: 15.2186 - mse: 394.8508
+
+--- Test Set Evaluation ---
+MAE: 15.22 years
+MSE: 394.85
+Loss (MAE): 15.34
+Training epochs: 18
+Min validation MAE: 16.32
+Max training MAE: 32.78
+libpng warning: iCCP: known incorrect sRGB profile
+Corrupt JPEG data: bad Huffman code
+Corrupt JPEG data: premature end of data segment
+
+Process finished with exit code 0
+'''
