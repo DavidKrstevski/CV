@@ -1,0 +1,6 @@
+=== Test subset evaluation summary ===
+Total images evaluated: 3617
+MAE  : 26.736410
+MSE  : 1061.780762
+RMSE : 32.584978
+R2   : -1.567089
