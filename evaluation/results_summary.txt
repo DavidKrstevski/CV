@@ -1,0 +1,6 @@
+=== Test Set Evaluation Summary (Real Ages) ===
+Total images evaluated: 3615
+MAE  : 13.533590 years
+MSE  : 304.360931 (years²)
+RMSE : 17.445943 years
+R²   : 0.248410
