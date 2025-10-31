@@ -1,11 +1,6 @@
-# STILL HAS TO BE CHANGED, BECAUSE AGE WAS NORMALIZED IN THE OTHER FILE
-
 import os
-import sys
-import atexit
 import math
 import random
-import logging
 import pickle
 import numpy as np
 import pandas as pd
@@ -32,70 +27,13 @@ SHOW_WORST_N = 8
 # Create output directory
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# Set up a "tee" for stdout/stderr so everything printed is also saved to a log file
-log_path = os.path.join(OUTPUT_DIR, "run_log.txt")
-_log_file = open(log_path, "w", encoding="utf-8")
-
-class Tee:
-    def __init__(self, *streams):
-        self.streams = streams
-    def write(self, data):
-        for s in self.streams:
-            try:
-                s.write(data)
-            except Exception:
-                pass
-    def flush(self):
-        for s in self.streams:
-            try:
-                s.flush()
-            except Exception:
-                pass
-
-# preserve originals
-_original_stdout = sys.stdout
-_original_stderr = sys.stderr
-
-# replace with tee that writes to both console and log file
-sys.stdout = Tee(_original_stdout, _log_file)
-sys.stderr = Tee(_original_stderr, _log_file)
-
-# register cleanup to restore streams and close file
-def _cleanup():
-    try:
-        sys.stdout = _original_stdout
-        sys.stderr = _original_stderr
-    except Exception:
-        pass
-    try:
-        _log_file.flush()
-        _log_file.close()
-    except Exception:
-        pass
-
-atexit.register(_cleanup)
-
-# Also set up python logging (optional, logs to same file + console)
-logger = logging.getLogger("evaluate_logger")
-logger.setLevel(logging.INFO)
-# Avoid adding multiple handlers if script re-imported
-if not logger.handlers:
-    fh = logging.FileHandler(log_path, encoding="utf-8")
-    fh.setLevel(logging.INFO)
-    ch = logging.StreamHandler(_original_stdout)  # still print to real console
-    ch.setLevel(logging.INFO)
-    fmt = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s", "%Y-%m-%d %H:%M:%S")
-    fh.setFormatter(fmt)
-    ch.setFormatter(fmt)
-    logger.addHandler(fh)
-    logger.addHandler(ch)
-
 # For reproducibility
 np.random.seed(RANDOM_SEED)
 random.seed(RANDOM_SEED)
 sns.set_theme(style="whitegrid")
 
-logger.info("Starting evaluation script. All console output will be saved to %s", log_path)
+# You may want to add a simple print statement here instead of the logger.info line
+print("Starting evaluation script.")
 
 # ---------------------------
 # Utility: parse filename to metadata
@@ -117,7 +55,7 @@ def parse_filename_meta(fname):
 # ---------------------------
 # 1) Load model
 # ---------------------------
-logger.info("Loading model: %s", MODEL_PATH)
+print("Loading model: %s" % MODEL_PATH) # Replaced logger.info with print
 model = load_model(MODEL_PATH)
 
 # ensure model is built (helps Sequential models)
@@ -161,7 +99,7 @@ y_real = np.array(y_all[idx_test], dtype=np.float32)
 # Standardize target (for models trained on standardized ages)
 y_std = (y_real - age_mean) / age_std
 
-logger.info("Loaded test set from memmap: %d images", X_test.shape[0])
+print("Loaded test set from memmap: %d images", X_test.shape[0])
 
 # Reconstruct metadata dataframe
 meta_list = []
@@ -175,7 +113,7 @@ meta_df = pd.DataFrame(meta_list)
 # ---------------------------
 # 3) Model predictions (no augmentation)
 # ---------------------------
-logger.info("Predicting on test set...")
+print("Predicting on test set...")
 y_pred_std = model.predict(X_test, batch_size=BATCH_SIZE, verbose=1).flatten()
 
 # Denormalize predictions back to real ages
@@ -187,11 +125,11 @@ mse = mean_squared_error(y_real, y_pred)
 rmse = math.sqrt(mse)
 r2 = r2_score(y_real, y_pred)
 
-logger.info("=== Basic Metrics (Real Ages) ===")
-logger.info("MAE  : %.4f years", mae)
-logger.info("MSE  : %.4f", mse)
-logger.info("RMSE : %.4f", rmse)
-logger.info("R²   : %.4f", r2)
+print("=== Basic Metrics (Real Ages) ===")
+print("MAE  : %.4f years", mae)
+print("MSE  : %.4f", mse)
+print("RMSE : %.4f", rmse)
+print("R²   : %.4f", r2)
 
 # Save CSV of predictions
 results_df = meta_df.copy()
@@ -204,7 +142,7 @@ results_df["abs_error_real"] = np.abs(results_df["error_real"])
 
 csv_path = os.path.join(OUTPUT_DIR, "test_predictions.csv")
 results_df.to_csv(csv_path, index=False)
-logger.info("Saved predictions to %s", csv_path)
+print("Saved predictions to %s", csv_path)
 
 # ---------------------------
 # 4) Visualizations & Analyses (saved to OUTPUT_DIR)
@@ -212,9 +150,9 @@ logger.info("Saved predictions to %s", csv_path)
 def savefig(pth):
     try:
         plt.savefig(pth, dpi=150, bbox_inches="tight")
-        logger.info("Saved plot: %s", pth)
+        print("Saved plot: %s", pth)
     except Exception as e:
-        logger.exception("Failed to save plot %s: %s", pth, str(e))
+        print("Failed to save plot %s: %s", pth, str(e))
     finally:
         plt.close()
 
@@ -322,7 +260,7 @@ with open(summary_path, "w", encoding="utf-8") as f:
     f.write(f"RMSE : {rmse:.6f} years\n")
     f.write(f"R²   : {r2:.6f}\n")
 
-logger.info("Saved summary to %s", summary_path)
+print("Saved summary to %s", summary_path)
 
 # ---------------------------
 # 5) Demographic Bias Analysis (Gender & Race)
@@ -338,7 +276,7 @@ if "gender" not in demo_df.columns or "race" not in demo_df.columns:
         demo_df["gender"] = meta_df["gender"].values
         demo_df["race"] = meta_df["race"].values
     else:
-        logger.warning("Gender/race metadata missing — demographic bias plots may be incomplete.")
+        print("Gender/race metadata missing — demographic bias plots may be incomplete.")
 
 # Human-readable labels
 demo_df["gender_str"] = demo_df["gender"].map(gender_map).fillna(demo_df["gender"].astype(str))
@@ -353,7 +291,7 @@ gender_stats = demo_df.groupby("gender_str").agg(
 
 gender_stats_path = os.path.join(OUTPUT_DIR, "gender_error_stats.csv")
 gender_stats.to_csv(gender_stats_path, index=False)
-logger.info("Saved gender error stats to %s", gender_stats_path)
+print("Saved gender error stats to %s", gender_stats_path)
 
 plt.figure(figsize=(6,5))
 sns.barplot(data=gender_stats, x="gender_str", y="MAE", palette=["#F9C5D5", "#F48FB1"])
@@ -372,7 +310,7 @@ race_stats = demo_df.groupby("race_str").agg(
 
 race_stats_path = os.path.join(OUTPUT_DIR, "race_error_stats.csv")
 race_stats.to_csv(race_stats_path, index=False)
-logger.info("Saved race error stats to %s", race_stats_path)
+print("Saved race error stats to %s", race_stats_path)
 
 plt.figure(figsize=(8,5))
 sns.barplot(data=race_stats, x="race_str", y="MAE", palette="mako")
@@ -382,46 +320,3 @@ plt.title("Mean Absolute Error by Race (Real Ages)")
 plt.xticks(rotation=15)
 plt.tight_layout()
 savefig(os.path.join(OUTPUT_DIR, "mae_by_race.png"))
-
-# ---------------------------
-# 6) Calibration per Age Bin (Real Ages)
-# ---------------------------
-# Use the real-age columns from results_df
-demo_df["age_bin"] = pd.cut(
-    demo_df["true_age_real"],
-    bins=AGE_BINS,
-    include_lowest=True,
-    right=False,
-    labels=[
-        f"{AGE_BINS[i]}–{AGE_BINS[i+1]-1}" if i < len(AGE_BINS) - 2 else f"{AGE_BINS[i]}+"
-        for i in range(len(AGE_BINS) - 1)
-    ]
-)
-
-calib = demo_df.groupby("age_bin", observed=False).agg(
-    true_mean=("true_age_real", "mean"),
-    pred_mean=("pred_age_real", "mean"),
-    count=("true_age_real", "count")
-).reset_index()
-
-plt.figure(figsize=(7, 6))
-plt.scatter(
-    calib["true_mean"],
-    calib["pred_mean"],
-    s=np.clip(calib["count"] * 2, 10, 300),  # scale marker size safely
-    c=calib["count"],
-    cmap="Reds",
-    alpha=0.8,
-    edgecolors="w",
-    linewidths=0.5,
-)
-max_age = max(calib["true_mean"].max(), calib["pred_mean"].max()) + 5
-plt.plot([0, max_age], [0, max_age], "k--", alpha=0.6)
-plt.xlabel("Mean True Age (bin)")
-plt.ylabel("Mean Predicted Age (bin)")
-plt.title("Calibration: Predicted vs True Age (per Age Bin, Real Ages)")
-cb = plt.colorbar()
-cb.set_label("Sample Count per Bin")
-plt.grid(True, linestyle="--", alpha=0.3)
-plt.tight_layout()
-savefig(os.path.join(OUTPUT_DIR, "calibration_age_bin.png"))

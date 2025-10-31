@@ -11,7 +11,6 @@ import cv2
 rng = None
 NORMALIZE_01 = True
 
-
 def set_augment_seed(random_generator, normalize=True):
     """
     Set the RNG object and normalization flag for augmentations.

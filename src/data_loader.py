@@ -55,7 +55,7 @@ def load_utkface_dataset(image_dir="./data/images"):
 
     print(f"Loaded {len(images)} valid images out of {len(all_files)} files.")
 
-    # %% 1a. Dataset Summary Statistics
+    # 1a. Dataset Summary Statistics
     df = pd.DataFrame(labels)
 
     print("\n=== Dataset Summary ===")

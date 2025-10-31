@@ -5,10 +5,6 @@ from matplotlib.container import BarContainer
 import numpy as np
 from collections import Counter
 
-# Set theme and gentle palette
-sns.set_theme(style="whitegrid")
-rosa_palette = ["#F9C5D5", "#F7A1C4", "#F48FB1", "#F06292", "#EC407A"]
-
 def plot_random_samples(images, labels, gender_map, race_map):
     # --- Random sample visualization ---
     plt.figure(figsize=(10, 6))
@@ -32,6 +28,10 @@ def plot_random_samples(images, labels, gender_map, race_map):
     plt.show()
 
 def plot_distribution_charts(df):
+    # Set theme and gentle palette
+    sns.set_theme(style="whitegrid")
+    rosa_palette = ["#F9C5D5", "#F7A1C4", "#F48FB1", "#F06292", "#EC407A"]
+
     # --- Age distribution histogram ---
     plt.figure(figsize=(8, 5))
     sns.histplot(df["age"], color="#F48FB1", kde=True)
